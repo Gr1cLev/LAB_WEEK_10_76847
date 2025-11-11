@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.lab_week_10_76847.viewmodels.TotalViewModel
 
 class MainActivity : AppCompatActivity() {
-
     private val viewModel by lazy {
         ViewModelProvider(this)[TotalViewModel::class.java]
     }
@@ -17,8 +16,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         prepareViewModel()
-        // Initialize the text with the starting value
-        updateText(viewModel.total)
     }
 
     private fun updateText(total: Int) {
@@ -27,9 +24,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun prepareViewModel(){
+        // Observe the LiveData object
+        viewModel.total.observe(this) { total ->
+            // Whenever the value of the LiveData object changes
+            // the updateText() is called, with the new value as the parameter
+            updateText(total)
+        }
+
         findViewById<Button>(R.id.button_increment).setOnClickListener {
             viewModel.incrementTotal()
-            updateText(viewModel.total)
         }
     }
 }
